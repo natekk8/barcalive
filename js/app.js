@@ -64,43 +64,43 @@ const TEAM_CRESTS = {
 
 // Custom Channel Mappings (API Name -> Filename)
 const CHANNEL_LOGO_MAP = {
-    "Canal+ Sport": "canal-plus-sport-pl.png",
-    "Canal+ Sport 2": "canal-plus-sport-2-pl.png",
-    "Canal+ Sport 3": "canal-plus-sport-3-pl.png",
-    "Canal+ Sport 4": "canal-plus-sport-4-pl.png",
-    "Canal+ Sport 5": "canal-plus-sport-5-pl.png",
-    "Canal+ Now": "canal-plus-now-pl.png",
-    "DAZN": "dazn-int.png",
-    "DAZN 1": "dazn1-int.png",
-    "DAZN 2": "dazn2-int.png",
-    "Eleven Sports": "eleven-sports-int.png",
-    "Eleven Sports 1": "eleven-sports-1-int.png",
-    "Eleven Sports 2": "eleven-sports-2-int.png",
-    "Eleven Sports 3": "eleven-sports-3-int.png",
-    "Eleven Sports 4": "eleven-sports-4-int.png",
-    "Eleven Sports 5": "eleven-sports-5-int.png",
-    "Eleven Sports 6": "eleven-sports-6-int.png",
-    "Polsat Sport": "polsat-sport-pl.png",
-    "Polsat Sport 1": "polsat-sport-1-pl.png",
-    "Polsat Sport 2": "polsat-sport-2-pl.png",
-    "Polsat Sport 3": "polsat-sport-3-pl.png",
-    "Polsat Sport Extra": "polsat-sport-extra-pl.png",
-    "Polsat Sport Extra 1": "polsat-sport-extra-1-pl.png",
-    "Polsat Sport Extra 2": "polsat-sport-extra-2-pl.png",
-    "Polsat Sport Extra 3": "polsat-sport-extra-3-pl.png",
-    "Polsat Sport Extra 4": "polsat-sport-extra-4-pl.png",
-    "Polsat Sport Fight": "polsat-sport-fight-pl.png",
-    "Polsat Sport News": "polsat-sport-news-pl.png",
-    "Polsat Sport Premium 1": "polsat-sport-premium-1-pl.png",
-    "Polsat Sport Premium 2": "polsat-sport-premium-2-pl.png",
-    "Red Bull TV": "red-bull-tv-int.png",
-    "TVP Sport": "tvp-sport-pl.png",
-    "TVP Sport HD": "tvp-sport-hd-pl.png",
+    "Canal+ Sport": "canal-plus-sport-pl.webp",
+    "Canal+ Sport 2": "canal-plus-sport-2-pl.webp",
+    "Canal+ Sport 3": "canal-plus-sport-3-pl.webp",
+    "Canal+ Sport 4": "canal-plus-sport-4-pl.webp",
+    "Canal+ Sport 5": "canal-plus-sport-5-pl.webp",
+    "Canal+ Now": "canal-plus-now-pl.webp",
+    "DAZN": "dazn-int.webp",
+    "DAZN 1": "dazn1-int.webp",
+    "DAZN 2": "dazn2-int.webp",
+    "Eleven Sports": "eleven-sports-int.webp",
+    "Eleven Sports 1": "eleven-sports-1-int.webp",
+    "Eleven Sports 2": "eleven-sports-2-int.webp",
+    "Eleven Sports 3": "eleven-sports-3-int.webp",
+    "Eleven Sports 4": "eleven-sports-4-int.webp",
+    "Eleven Sports 5": "eleven-sports-5-int.webp",
+    "Eleven Sports 6": "eleven-sports-6-int.webp",
+    "Polsat Sport": "polsat-sport-pl.webp",
+    "Polsat Sport 1": "polsat-sport-1-pl.webp",
+    "Polsat Sport 2": "polsat-sport-2-pl.webp",
+    "Polsat Sport 3": "polsat-sport-3-pl.webp",
+    "Polsat Sport Extra": "polsat-sport-extra-pl.webp",
+    "Polsat Sport Extra 1": "polsat-sport-extra-1-pl.webp",
+    "Polsat Sport Extra 2": "polsat-sport-extra-2-pl.webp",
+    "Polsat Sport Extra 3": "polsat-sport-extra-3-pl.webp",
+    "Polsat Sport Extra 4": "polsat-sport-extra-4-pl.webp",
+    "Polsat Sport Fight": "polsat-sport-fight-pl.webp",
+    "Polsat Sport News": "polsat-sport-news-pl.webp",
+    "Polsat Sport Premium 1": "polsat-sport-premium-1-pl.webp",
+    "Polsat Sport Premium 2": "polsat-sport-premium-2-pl.webp",
+    "Red Bull TV": "red-bull-tv-int.webp",
+    "TVP Sport": "tvp-sport-pl.webp",
+    "TVP Sport HD": "tvp-sport-hd-pl.webp",
     // Competitions
-    "Champions League": "cl.png",
-    "La Liga": "pd.png",
-    "Copa del Rey": "cdr.png",
-    "Supercopa de Espana": "scde.png"
+    "Champions League": "cl.webp",
+    "La Liga": "pd.webp",
+    "Copa del Rey": "cdr.webp",
+    "Supercopa de Espana": "scde.webp"
 };
 
 const LOGO_BASE_URL = "https://bwmkvehxzcdzdxiqdqin.supabase.co/storage/v1/object/public/logos";
@@ -535,10 +535,10 @@ function renderNextMatch(match, isLive = false, standings = []) {
 
         // Strict Mappings based on User Feedback
         // Strict Mappings based on User Feedback
-        if (code === 'CDR' || n.includes('copa del rey') || n.includes('puchar')) return `${baseUrl}/cdr${themeSuffix}.png`;
-        if (code === 'SC' || n.includes('supercopa') || n.includes('superpuchar')) return `${baseUrl}/scde${themeSuffix}.png`;
-        if (code === 'PD' || n.includes('la liga') || n.includes('primera')) return `${baseUrl}/pd${themeSuffix}.png`;
-        if (code === 'CL' || n.includes('champions') || n.includes('liga mistrz')) return `${baseUrl}/ucl${themeSuffix}.png`; // Stricter 'mistrz' check
+        if (code === 'CDR' || n.includes('copa del rey') || n.includes('puchar')) return `${baseUrl}/cdr${themeSuffix}.webp`;
+        if (code === 'SC' || n.includes('supercopa') || n.includes('superpuchar')) return `${baseUrl}/scde${themeSuffix}.webp`;
+        if (code === 'PD' || n.includes('la liga') || n.includes('primera')) return `${baseUrl}/pd${themeSuffix}.webp`;
+        if (code === 'CL' || n.includes('champions') || n.includes('liga mistrz')) return `${baseUrl}/ucl${themeSuffix}.webp`; // Stricter 'mistrz' check
     };
     const compLogo = getCompLogo(match.competition.code, match.competition.name);
 
@@ -612,7 +612,7 @@ function renderNextMatch(match, isLive = false, standings = []) {
     const metaInfo = metaInfoParts.join(' • ');
 
     container.innerHTML = `
-        <div class="flex flex-col items-center w-full relative" style="padding-top: 3rem;"> <!-- Increased padding for tile -->
+        <div class="flex flex-col items-center w-full relative" style="padding-top: 4rem;"> <!-- Increased padding for tile to prevent overlap -->
             <!-- Badge in top-left corner -->
             ${isLive ? `
             <div class="absolute -top-3 left-0 z-10">
@@ -637,6 +637,7 @@ function renderNextMatch(match, isLive = false, standings = []) {
                           data-code="${match.competition.code}" 
                           data-name="${match.competition.name}"
                           alt="${match.competition.name} Logo"
+                          width="56" height="56"
                           onerror="this.style.display='none'" 
                           title="${match.competition.name}">
                  </div>
@@ -653,6 +654,7 @@ function renderNextMatch(match, isLive = false, standings = []) {
                              data-name="${match.homeTeam.name || match.homeTeam.shortName}" 
                              alt="${match.homeTeam.name || match.homeTeam.shortName} Crest"
                              class="w-12 md:w-20 object-contain" 
+                             width="80" height="80"
                              loading="lazy" 
                              referrerpolicy="no-referrer" 
                              onerror="handleLogoError(this)">
@@ -679,6 +681,7 @@ function renderNextMatch(match, isLive = false, standings = []) {
                              data-name="${match.awayTeam.name || match.awayTeam.shortName}" 
                              alt="${match.awayTeam.name || match.awayTeam.shortName} Crest"
                              class="w-12 md:w-20 object-contain" 
+                             width="80" height="80"
                              loading="lazy" 
                              referrerpolicy="no-referrer" 
                              onerror="handleLogoError(this)">
@@ -1052,14 +1055,14 @@ function renderTransmissions(channels) {
 
                 <div class="shrink-0">
                      ${logoUrl
-                ? `<img src="${logoUrl}" alt="${channel}" class="w-12 h-12 object-contain filter drop-shadow-lg">`
+                ? `<img src="${logoUrl}" alt="${channel}" width="48" height="48" class="w-12 h-12 object-contain filter drop-shadow-lg">`
                 : `<div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center border border-white/5"><span class="text-[10px] font-bold text-white/80 leading-tight text-center">${channel.substring(0, 3)}</span></div>`
             }
                 </div>
                 
                 <div class="flex flex-col min-w-0">
                     <span class="text-sm font-bold text-white tracking-wide truncate">${channel}</span>
-                    <span class="text-[9px] font-medium text-white/50 uppercase tracking-wider">Transmisja</span>
+                    <span class="text-[9px] font-medium text-white/70 uppercase tracking-wider">Transmisja</span>
                 </div>
             </div>
         `;
