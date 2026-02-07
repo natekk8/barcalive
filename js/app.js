@@ -613,27 +613,10 @@ function renderNextMatch(match, isLive = false, standings = []) {
 
     container.innerHTML = `
         <div class="flex flex-col items-center w-full relative" style="padding-top: 5rem;"> <!-- Increased padding (4rem -> 5rem) -->
-            <!-- Badge in top-left corner -->
-            ${isLive ? `
-            <div class="absolute -top-3 left-0 z-10">
-                <span class="inline-flex items-center gap-2 bg-red-500 text-white live-badge px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
-                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                    LIVE
-                </span>
-            </div>
-            ` : `
-            <div class="absolute -top-3 left-0 z-10">
-                <span style="background: rgba(237, 187, 0, 0.15); color: var(--gold);" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest border border-gold/30">
-                    <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
-                    ${t('nextMatch') || 'Następny mecz'}
-                </span>
-            </div>
-            `}
-
-            <!-- Competition Logo Tile (Top Right) -->
-            <div class="absolute -top-4 right-4 z-20 flex justify-center pointer-events-none">
-                 <div class="w-14 h-14 md:w-20 md:h-20 bg-white/5 rounded-[18px] md:rounded-[28px] flex items-center justify-center border border-white/10 shadow-xl backdrop-blur-md pointer-events-auto">
-                     <img src="${compLogo}" class="w-9 h-9 md:w-14 md:h-14 object-contain filter drop-shadow-md theme-logo" 
+            <!-- DESKTOP ONLY: Competition Logo Tile (Floating Top Center) -->
+            <div class="hidden md:flex absolute -top-10 left-0 right-0 mx-auto w-fit z-20 justify-center pointer-events-none">
+                 <div class="w-20 h-20 bg-white/5 rounded-[28px] flex items-center justify-center border border-white/10 shadow-xl backdrop-blur-md pointer-events-auto">
+                     <img src="${compLogo}" class="w-14 h-14 object-contain filter drop-shadow-md theme-logo" 
                           data-code="${match.competition.code}" 
                           data-name="${match.competition.name}"
                           alt="${match.competition.name} Logo"
@@ -644,10 +627,58 @@ function renderNextMatch(match, isLive = false, standings = []) {
                  </div>
             </div>
 
-            <!-- Meta Info (Round / Referee / Venue) - Moved to relative position to avoid overlap -->
-            ${metaInfo ? `<div class="w-full text-center text-[10px] md:text-xs font-bold opacity-60 uppercase tracking-wider mb-4 px-2 leading-tight relative -mt-2">${metaInfo}</div>` : ''}
+            <!-- DESKTOP ONLY: Round Info (Top Right) -->
+            ${metaInfo ? `<div class="hidden md:block absolute top-4 right-4 text-xs font-bold opacity-60 uppercase tracking-wider text-right leading-tight">${metaInfo}</div>` : ''}
 
-            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-16 animate-in w-full justify-center">
+            <!-- DESKTOP ONLY: Badge (Top Left) -->
+            <div class="hidden md:block absolute -top-3 left-0 z-10">
+                 ${isLive ? `
+                <span class="inline-flex items-center gap-2 bg-red-500 text-white live-badge px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
+                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                    LIVE
+                </span>
+                 ` : `
+                <span style="background: rgba(237, 187, 0, 0.15); color: var(--gold);" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest border border-gold/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
+                    ${t('nextMatch') || 'Następny mecz'}
+                </span>
+                 `}
+            </div>
+
+            <!-- MOBILE ONLY: Hybrid Header Row (Badge Left, Round Info Right) -->
+            <div class="flex md:hidden justify-between items-center w-full mb-4 px-1">
+                 <!-- Badge -->
+                 ${isLive ? `
+                <span class="inline-flex items-center gap-1.5 bg-red-500 text-white live-badge px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest shadow-lg">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                    LIVE
+                </span>
+                 ` : `
+                <span style="background: rgba(237, 187, 0, 0.15); color: var(--gold);" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border border-gold/30">
+                    <span class="w-1 h-1 rounded-full bg-gold animate-pulse"></span>
+                    ${t('nextMatch') || 'Następny'}
+                </span>
+                 `}
+
+                 <!-- Round Info -->
+                 ${metaInfo ? `<div class="text-[9px] font-bold opacity-60 uppercase tracking-wider text-right max-w-[50%] leading-tight">${metaInfo}</div>` : ''}
+            </div>
+
+            <!-- MOBILE ONLY: Centered Competition Logo -->
+            <div class="flex md:hidden justify-center mb-6">
+                 <div class="w-14 h-14 bg-white/5 rounded-[18px] flex items-center justify-center border border-white/10 shadow-lg backdrop-blur-md">
+                     <img src="${compLogo}" class="w-9 h-9 object-contain filter drop-shadow-md theme-logo" 
+                          data-code="${match.competition.code}" 
+                          alt="${match.competition.name} Logo"
+                          width="36" height="36"
+                          fetchpriority="high"
+                          onerror="this.style.display='none'">
+                 </div>
+            </div>
+
+
+
+            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-16 animate-in w-full justify-center pt-2 md:pt-8">
                 <div class="text-center relative group">
                     <div class="w-20 h-20 md:w-32 md:h-32 bg-white/5 rounded-[24px] md:rounded-[40px] flex items-center justify-center border border-white/10 mb-3 mx-auto shadow-xl transition-all hover:scale-105"
                          style="box-shadow: 0 0 30px ${homeColor}20;"> <!-- Dynamic Shadow -->
