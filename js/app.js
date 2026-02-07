@@ -612,7 +612,7 @@ function renderNextMatch(match, isLive = false, standings = []) {
     const metaInfo = metaInfoParts.join(' • ');
 
     container.innerHTML = `
-        <div class="flex flex-col items-center w-full relative" style="padding-top: 4rem;"> <!-- Increased padding for tile to prevent overlap -->
+        <div class="flex flex-col items-center w-full relative" style="padding-top: 5rem;"> <!-- Increased padding (4rem -> 5rem) -->
             <!-- Badge in top-left corner -->
             ${isLive ? `
             <div class="absolute -top-3 left-0 z-10">
@@ -644,23 +644,23 @@ function renderNextMatch(match, isLive = false, standings = []) {
                  </div>
             </div>
 
-            <!-- Meta Info (Round / Referee / Venue) -->
-            ${metaInfo ? `<div class="absolute top-2 right-0 text-[8px] md:text-[9px] font-bold opacity-40 uppercase tracking-wider text-right max-w-[60%] leading-tight">${metaInfo}</div>` : ''}
+            <!-- Meta Info (Round / Referee / Venue) - Moved to relative position to avoid overlap -->
+            ${metaInfo ? `<div class="w-full text-center text-[10px] md:text-xs font-bold opacity-60 uppercase tracking-wider mb-4 px-2 leading-tight relative -mt-2">${metaInfo}</div>` : ''}
 
-            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-16 animate-in w-full justify-center pt-8">
+            <div class="flex flex-col md:flex-row items-center gap-6 md:gap-16 animate-in w-full justify-center">
                 <div class="text-center relative group">
                     <div class="w-20 h-20 md:w-32 md:h-32 bg-white/5 rounded-[24px] md:rounded-[40px] flex items-center justify-center border border-white/10 mb-3 mx-auto shadow-xl transition-all hover:scale-105"
                          style="box-shadow: 0 0 30px ${homeColor}20;"> <!-- Dynamic Shadow -->
                         <img src="${getTeamCrest(match.homeTeam.name || match.homeTeam.shortName, match.homeTeam.crest)}" 
                              data-name="${match.homeTeam.name || match.homeTeam.shortName}" 
                              alt="${match.homeTeam.name || match.homeTeam.shortName} Crest"
-                             class="w-12 md:w-20 object-contain" 
+                             class="w-16 md:w-20 object-contain" 
                              width="80" height="80"
                              fetchpriority="high"
                              referrerpolicy="no-referrer" 
                              onerror="handleLogoError(this)">
                     </div>
-                    <h3 class="font-bold text-xs md:text-xl flex items-center justify-center gap-2">
+                    <h3 class="font-bold text-sm md:text-xl flex items-center justify-center gap-2">
                         ${match.homeTeam.shortName}
                         
                     </h3>
@@ -681,13 +681,13 @@ function renderNextMatch(match, isLive = false, standings = []) {
                         <img src="${getTeamCrest(match.awayTeam.name || match.awayTeam.shortName, match.awayTeam.crest)}" 
                              data-name="${match.awayTeam.name || match.awayTeam.shortName}" 
                              alt="${match.awayTeam.name || match.awayTeam.shortName} Crest"
-                             class="w-12 md:w-20 object-contain" 
+                             class="w-16 md:w-20 object-contain" 
                              width="80" height="80"
                              fetchpriority="high"
                              referrerpolicy="no-referrer" 
                              onerror="handleLogoError(this)">
                     </div>
-                    <h3 class="font-bold text-xs md:text-xl flex items-center justify-center gap-2">
+                    <h3 class="font-bold text-sm md:text-xl flex items-center justify-center gap-2">
                         ${match.awayTeam.shortName}
                         ${awayPos ? `<span class="bg-white/10 text-[9px] px-1.5 py-0.5 rounded text-white/60 font-mono" title="Pozycja w lidze">#${awayPos}</span>` : ''}
                     </h3>
