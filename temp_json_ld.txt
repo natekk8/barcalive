@@ -1,0 +1,23 @@
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "BarcaLive",
+        "url": "https://barcalive.online/",
+        "alternateName": ["FC Barcelona Live Hub"],
+        "description": "Oficjalne centrum kibica FC Barcelony. Wyniki na żywo, terminarz, tabele."
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SportsOrganization",
+        "name": "FC Barcelona",
+        "url": "https://www.fcbarcelona.com",
+        "sameAs": [
+            "https://www.facebook.com/fcbarcelona",
+            "https://twitter.com/FCBarcelona",
+            "https://www.instagram.com/fcbarcelona/"
+        ]
+    }
+    </script>

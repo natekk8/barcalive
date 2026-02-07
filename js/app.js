@@ -636,6 +636,7 @@ function renderNextMatch(match, isLive = false, standings = []) {
                      <img src="${compLogo}" class="w-10 h-10 md:w-14 md:h-14 object-contain filter drop-shadow-md theme-logo" 
                           data-code="${match.competition.code}" 
                           data-name="${match.competition.name}"
+                          alt="${match.competition.name} Logo"
                           onerror="this.style.display='none'" 
                           title="${match.competition.name}">
                  </div>
@@ -648,7 +649,13 @@ function renderNextMatch(match, isLive = false, standings = []) {
                 <div class="text-center relative group">
                     <div class="w-20 h-20 md:w-32 md:h-32 bg-white/5 rounded-[24px] md:rounded-[40px] flex items-center justify-center border border-white/10 mb-3 mx-auto shadow-xl transition-all hover:scale-105"
                          style="box-shadow: 0 0 30px ${homeColor}20;"> <!-- Dynamic Shadow -->
-                        <img src="${getTeamCrest(match.homeTeam.name || match.homeTeam.shortName, match.homeTeam.crest)}" data-name="${match.homeTeam.name || match.homeTeam.shortName}" class="w-12 md:w-20 object-contain" loading="lazy" referrerpolicy="no-referrer" onerror="handleLogoError(this)">
+                        <img src="${getTeamCrest(match.homeTeam.name || match.homeTeam.shortName, match.homeTeam.crest)}" 
+                             data-name="${match.homeTeam.name || match.homeTeam.shortName}" 
+                             alt="${match.homeTeam.name || match.homeTeam.shortName} Crest"
+                             class="w-12 md:w-20 object-contain" 
+                             loading="lazy" 
+                             referrerpolicy="no-referrer" 
+                             onerror="handleLogoError(this)">
                     </div>
                     <h3 class="font-bold text-xs md:text-xl flex items-center justify-center gap-2">
                         ${match.homeTeam.shortName}
@@ -668,7 +675,13 @@ function renderNextMatch(match, isLive = false, standings = []) {
 
                 <div class="text-center relative group">
                      <div class="w-20 h-20 md:w-32 md:h-32 bg-white/5 rounded-[24px] md:rounded-[40px] flex items-center justify-center border border-white/10 mb-3 mx-auto shadow-xl transition-all hover:scale-105">
-                        <img src="${getTeamCrest(match.awayTeam.name || match.awayTeam.shortName, match.awayTeam.crest)}" data-name="${match.awayTeam.name || match.awayTeam.shortName}" class="w-12 md:w-20 object-contain" loading="lazy" referrerpolicy="no-referrer" onerror="handleLogoError(this)">
+                        <img src="${getTeamCrest(match.awayTeam.name || match.awayTeam.shortName, match.awayTeam.crest)}" 
+                             data-name="${match.awayTeam.name || match.awayTeam.shortName}" 
+                             alt="${match.awayTeam.name || match.awayTeam.shortName} Crest"
+                             class="w-12 md:w-20 object-contain" 
+                             loading="lazy" 
+                             referrerpolicy="no-referrer" 
+                             onerror="handleLogoError(this)">
                     </div>
                     <h3 class="font-bold text-xs md:text-xl flex items-center justify-center gap-2">
                         ${match.awayTeam.shortName}

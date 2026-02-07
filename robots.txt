@@ -1,16 +1,4 @@
-# robots.txt for BarcaLive
-# Allow all search engines to index the site
-
 User-agent: *
 Allow: /
 
-# Disallow admin or sensitive areas (if any)
-Disallow: /functions/
-Disallow: /workers/
-Disallow: /_worker.js
-
-# Sitemap location
 Sitemap: https://barcalive.online/sitemap.xml
-
-# Crawl delay (optional - helps prevent server overload)
-Crawl-delay: 1
