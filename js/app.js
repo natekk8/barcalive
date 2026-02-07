@@ -632,8 +632,8 @@ function renderNextMatch(match, isLive = false, standings = []) {
             `}
 
             <!-- Competition Logo Tile (Centered Top) -->
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 z-20 flex justify-center">
-                 <div class="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-[20px] md:rounded-[28px] flex items-center justify-center border border-white/10 shadow-xl backdrop-blur-md">
+            <div class="absolute -top-10 left-0 right-0 mx-auto w-fit z-20 flex justify-center pointer-events-none">
+                 <div class="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-[20px] md:rounded-[28px] flex items-center justify-center border border-white/10 shadow-xl backdrop-blur-md pointer-events-auto">
                      <img src="${compLogo}" class="w-10 h-10 md:w-14 md:h-14 object-contain filter drop-shadow-md theme-logo" 
                           data-code="${match.competition.code}" 
                           data-name="${match.competition.name}"
@@ -1013,7 +1013,7 @@ function renderTransmissions(channels) {
 
     if (!channels || channels.length === 0) {
         container.innerHTML = `
-            <div class="flex flex-col items-center justify-center w-full h-full min-h-[220px] text-center opacity-40">
+            <div class="col-span-full flex flex-col items-center justify-center w-full h-full min-h-[220px] text-center opacity-40">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
                 </svg>
