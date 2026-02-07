@@ -544,7 +544,10 @@ function renderNextMatch(match, isLive = false, standings = []) {
     // Referee, Round, Venue, Stage
     let roundInfo = '';
     if (match.currentRound) {
-        roundInfo = `KOLEJKA ${match.currentRound}`;
+        // If round is just a number (e.g. 23), prefix with "KOLEJKA"
+        // If it's text (e.g. "Półfinał"), show as is
+        const isNumeric = /^\d+$/.test(String(match.currentRound));
+        roundInfo = isNumeric ? `KOLEJKA ${match.currentRound}` : match.currentRound;
     } else if (match.displayName) {
         roundInfo = match.displayName;
     }
@@ -888,9 +891,15 @@ function renderScheduleList(type) {
                         </h4>
                         <span class="text-[9px] font-black opacity-40 uppercase tracking-widest text-right">
                             ${m.competition.name || m.competition.code}
-                            ${m.currentRound
-                ? `<br><span class="opacity-60">Kolejka ${m.currentRound}</span>`
-                : (m.displayName ? `<br><span class="opacity-60">${m.displayName}</span>` : '')}
+                            ${(() => {
+                if (m.currentRound) {
+                    const isNumeric = /^\d+$/.test(String(m.currentRound));
+                    return `<br><span class="opacity-60">${isNumeric ? 'Kolejka ' + m.currentRound : m.currentRound}</span>`;
+                } else if (m.displayName) {
+                    return `<br><span class="opacity-60">${m.displayName}</span>`;
+                }
+                return '';
+            })()}
                         </span>
                     </div>
                     <p class="text-xs text-secondary font-medium">${I18n.formatDate(date, { weekday: 'long', month: 'short', day: 'numeric' })}${timeDisplay}</p>
