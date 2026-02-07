@@ -10,6 +10,13 @@
   --skeleton-highlight: rgba(255, 255, 255, 0.1);
 }
 
+body.light-theme {
+  --mesh-color-1: #e2e8f0;
+  /* Light Slate */
+  --skeleton-base: rgba(0, 0, 0, 0.05);
+  --skeleton-highlight: rgba(0, 0, 0, 0.1);
+}
+
 /* --- Ambient Mesh Background --- */
 .mesh-background {
   position: fixed;

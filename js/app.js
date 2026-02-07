@@ -152,6 +152,20 @@ window.toggleTheme = function () {
     const isLight = document.body.classList.toggle('light-theme');
     localStorage.setItem('bp_theme', isLight ? 'light' : 'dark');
     window.updateThemeIcons();
+
+    // Refresh Next Match Component to update logo
+    if (window.initOverview && window.currentPage === 'overview') {
+        // We can just call renderNextMatch if we have the data, but fetching is safer to ensure state consistency
+        // Or better: Reload page? No.
+        // Let's rely on cached data
+        const cached = barcaAPI._cache.get('allData');
+        if (cached && cached.data) {
+            const live = cached.data.matches.live?.[0];
+            const upcoming = cached.data.matches.upcoming?.[0];
+            if (live || upcoming) window.renderNextMatch(live || upcoming, !!live);
+        }
+    }
+
     // Refresh components to update toggle visual state
     if (window.initComponents && window.currentPage) {
         window.initComponents(window.currentPage);
@@ -511,18 +525,19 @@ function renderNextMatch(match, isLive = false, standings = []) {
 
 
     // Competition Logo Logic
-    // Competition Logo Logic
     const getCompLogo = (code, name) => {
         const baseUrl = 'https://bwmkvehxzcdzdxiqdqin.supabase.co/storage/v1/object/public/logos/competition';
         const isDark = !document.body.classList.contains('light-theme');
         const themeSuffix = isDark ? '-dark' : '-light';
+        const rawThemeSuffix = isDark ? '-dark' : '-light'; // Ensure consistency
 
         // Normalize name for checking
         const n = name.toLowerCase();
 
-        // Mappings
-        if (code === 'PD' || n.includes('la liga') || n.includes('primera')) return `${baseUrl}/pd${themeSuffix}.png`; // user said "pd.png" but requested theme suffix. Wait, user said "pd-light.png". Ok.
+        // Strict Mappings based on User Feedback
+        // "cl.png to Champions League, pd.png to La Liga, scde.png do Supercopa de Espana a cdr.png to Copa del Rey"
         if (code === 'CL' || n.includes('champions') || n.includes('mistrz')) return `${baseUrl}/cl${themeSuffix}.png`;
+        if (code === 'PD' || n.includes('la liga') || n.includes('primera')) return `${baseUrl}/pd${themeSuffix}.png`;
         if (code === 'CDR' || n.includes('copa del rey') || n.includes('puchar')) return `${baseUrl}/cdr${themeSuffix}.png`;
         if (code === 'SC' || n.includes('supercopa') || n.includes('superpuchar')) return `${baseUrl}/scde${themeSuffix}.png`;
 
@@ -618,13 +633,14 @@ function renderNextMatch(match, isLive = false, standings = []) {
             </div>
             `}
 
-            <!-- Competition Logo (Centered Top) -->
-            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
-                 <img src="${compLogo}" class="w-8 h-8 md:w-10 md:h-10 object-contain filter drop-shadow-lg" onerror="this.style.display='none'" title="${match.competition.name}">
+            <!-- Competition Logo (Centered Top - Robust) -->
+            <div class="absolute -top-8 left-0 w-full flex justify-center z-10 pointer-events-none">
+                 <img src="${compLogo}" class="w-12 h-12 md:w-20 md:h-20 object-contain filter drop-shadow-xl theme-logo" 
+                      data-code="${match.competition.code}" 
+                      data-name="${match.competition.name}"
+                      onerror="this.style.display='none'" 
+                      title="${match.competition.name}">
             </div>
-
-            <!-- Meta Info (Round / Referee / Venue) -->
-            ${metaInfo ? `<div class="absolute top-2 right-0 text-[8px] md:text-[9px] font-bold opacity-40 uppercase tracking-wider text-right max-w-[60%] leading-tight">${metaInfo}</div>` : ''}
 
             <!-- Meta Info (Round / Referee / Venue) -->
             ${metaInfo ? `<div class="absolute top-2 right-0 text-[8px] md:text-[9px] font-bold opacity-40 uppercase tracking-wider text-right max-w-[60%] leading-tight">${metaInfo}</div>` : ''}
@@ -997,11 +1013,11 @@ function renderTransmissions(channels) {
 
     if (!channels || channels.length === 0) {
         container.innerHTML = `
-            <div class="flex flex-col items-center justify-center h-full min-h-[200px] text-center opacity-40">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="flex flex-col items-center justify-center w-full h-full min-h-[220px] text-center opacity-40">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
                 </svg>
-                <span class="text-xs font-bold uppercase tracking-widest">Brak informacji o transmisji</span>
+                <span class="text-xs font-bold uppercase tracking-widest px-4">Brak informacji o transmisji</span>
             </div>`;
         return;
     }

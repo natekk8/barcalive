@@ -63,7 +63,8 @@ class DynamicIsland {
         });
 
         this.showOnboarding();
-        this.initDrag();
+        // this.initDrag(); // Drag disabled by user request (Features removed)
+        this.injectStyles(); // Ensure CSS is loaded
 
         // Restore state
         const isExpanded = sessionStorage.getItem('bp_island_expanded') === 'true';
@@ -95,14 +96,7 @@ class DynamicIsland {
         });
     }
 
-    initDrag() {
-        let startX, startY;
-        let initialX = 0, initialY = 0;
-        let targetX = 0, targetY = 0;
-        let currentX = 0, currentY = 0;
-        let rafId = null;
-
-        // CSS Injection for Snap & Blur
+    injectStyles() {
         const style = document.createElement('style');
         style.textContent = `
             .island-container {
@@ -147,100 +141,10 @@ class DynamicIsland {
             }
         `;
         document.head.appendChild(style);
+    }
 
-        const updatePosition = () => {
-            if (!this.isDragging) return;
-
-            // Smooth Lerp (0.15 factor for "weight")
-            currentX += (targetX - currentX) * 0.15;
-            currentY += (targetY - currentY) * 0.15;
-
-            // Apply transform
-            this.container.style.transform = `translate(${currentX}px, ${currentY}px)`;
-
-            rafId = requestAnimationFrame(updatePosition);
-        };
-
-        const onStart = (e) => {
-            if (this.islandInner.classList.contains('expanded')) return;
-
-            this.isDragging = true;
-            this.container.classList.add('dragging', 'island-blur'); // Add blur
-
-            // Get current visual position (left/top)
-            const rect = this.container.getBoundingClientRect();
-            initialX = rect.left;
-            initialY = rect.top;
-
-            // Mouse Start Pos
-            startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-            startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-            // Reset logic
-            targetX = 0; targetY = 0;
-            currentX = 0; currentY = 0;
-
-            // Lock container to current pixel position
-            this.container.style.left = `${initialX}px`;
-            this.container.style.top = `${initialY}px`;
-            this.container.style.transform = 'translate(0px, 0px)';
-            this.container.style.right = 'auto';
-            this.container.classList.remove('snap-left', 'snap-right', 'snap-center');
-
-            rafId = requestAnimationFrame(updatePosition);
-        };
-
-        const onMove = (e) => {
-            if (!this.isDragging) return;
-            e.preventDefault();
-
-            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-            // Update Target
-            targetX = clientX - startX;
-            targetY = clientY - startY;
-        };
-
-        const onEnd = (e) => {
-            if (!this.isDragging) return;
-            this.isDragging = false;
-            if (rafId) cancelAnimationFrame(rafId);
-
-            this.justDragged = true;
-            setTimeout(() => this.justDragged = false, 200); // Increased timeout
-
-            this.container.classList.remove('dragging', 'island-blur'); // Remove blur
-
-            // Find drop position
-            const rect = this.container.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const screenW = window.innerWidth;
-
-            // Reset styles
-            this.container.style.left = '';
-            this.container.style.top = '';
-            this.container.style.right = '';
-            this.container.style.transform = '';
-
-            // Logic: < 30% Left, > 70% Right
-            if (centerX < screenW * 0.3) {
-                this.setSnap('left');
-            } else if (centerX > screenW * 0.7) {
-                this.setSnap('right');
-            } else {
-                this.setSnap('center');
-            }
-        };
-
-        this.container.addEventListener('mousedown', onStart);
-        this.container.addEventListener('touchstart', onStart, { passive: false });
-
-        window.addEventListener('mousemove', onMove);
-        window.addEventListener('touchmove', onMove, { passive: false });
-
-        window.addEventListener('mouseup', onEnd);
-        window.addEventListener('touchend', onEnd);
+    initDrag() {
+        // Drag disabled by user request (Features removed)
     }
 
     setSnap(position) {
