@@ -534,12 +534,11 @@ function renderNextMatch(match, isLive = false, standings = []) {
         const n = name.toLowerCase();
 
         // Strict Mappings based on User Feedback
-        if (code === 'CL' || n.includes('champions') || n.includes('mistrz')) return `${baseUrl}/ucl${themeSuffix}.png`; // Changed CL to UCL
-        if (code === 'PD' || n.includes('la liga') || n.includes('primera')) return `${baseUrl}/pd${themeSuffix}.png`;
+        // Strict Mappings based on User Feedback
         if (code === 'CDR' || n.includes('copa del rey') || n.includes('puchar')) return `${baseUrl}/cdr${themeSuffix}.png`;
         if (code === 'SC' || n.includes('supercopa') || n.includes('superpuchar')) return `${baseUrl}/scde${themeSuffix}.png`;
-
-        return `https://crests.football-data.org/${code}.png`; // Fallback
+        if (code === 'PD' || n.includes('la liga') || n.includes('primera')) return `${baseUrl}/pd${themeSuffix}.png`;
+        if (code === 'CL' || n.includes('champions') || n.includes('liga mistrz')) return `${baseUrl}/ucl${themeSuffix}.png`; // Stricter 'mistrz' check
     };
     const compLogo = getCompLogo(match.competition.code, match.competition.name);
 
