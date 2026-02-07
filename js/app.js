@@ -613,8 +613,8 @@ function renderNextMatch(match, isLive = false, standings = []) {
 
     container.innerHTML = `
         <div class="flex flex-col items-center w-full relative" style="padding-top: 5rem;"> <!-- Increased padding (4rem -> 5rem) -->
-            <!-- DESKTOP ONLY: Competition Logo Tile (Floating Top Center) -->
-            <div class="hidden md:flex absolute -top-10 left-0 right-0 mx-auto w-fit z-20 justify-center pointer-events-none">
+            <!-- DESKTOP ONLY: Competition Logo Tile (Floating Top Center - Lowered) -->
+            <div class="hidden md:flex absolute -top-4 left-0 right-0 mx-auto w-fit z-20 justify-center pointer-events-none">
                  <div class="w-20 h-20 bg-white/5 rounded-[28px] flex items-center justify-center border border-white/10 shadow-xl backdrop-blur-md pointer-events-auto">
                      <img src="${compLogo}" class="w-14 h-14 object-contain filter drop-shadow-md theme-logo" 
                           data-code="${match.competition.code}" 
@@ -646,26 +646,26 @@ function renderNextMatch(match, isLive = false, standings = []) {
             </div>
 
             <!-- MOBILE ONLY: Hybrid Header Row (Badge Left, Round Info Right) -->
-            <div class="flex md:hidden justify-between items-start w-full mb-4 px-1 gap-4">
-                 <!-- Badge -->
+            <div class="flex md:hidden flex-col items-center w-full mb-8 px-1 gap-2">
+                 <!-- Badge (Centered) -->
                  ${isLive ? `
-                <span class="inline-flex items-center gap-1.5 bg-red-500 text-white live-badge px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest shadow-lg shrink-0">
+                <span class="inline-flex items-center gap-1.5 bg-red-500 text-white live-badge px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg shrink-0">
                     <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                     LIVE
                 </span>
                  ` : `
-                <span style="background: rgba(237, 187, 0, 0.15); color: var(--gold);" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border border-gold/30 shrink-0">
+                <span style="background: rgba(237, 187, 0, 0.15); color: var(--gold);" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border border-gold/30 shrink-0">
                     <span class="w-1 h-1 rounded-full bg-gold animate-pulse"></span>
                     ${t('nextMatch') || 'Następny'}
                 </span>
                  `}
 
-                 <!-- Round Info -->
-                 ${metaInfo ? `<div class="text-[9px] font-bold opacity-60 uppercase tracking-wider text-right leading-tight break-words max-w-[60%]">${metaInfo}</div>` : ''}
+                 <!-- Round Info (Centered below badge) -->
+                 ${metaInfo ? `<div class="text-[10px] font-bold opacity-60 uppercase tracking-wider text-center leading-tight break-words max-w-[80%] mt-1">${metaInfo}</div>` : ''}
             </div>
 
             <!-- MOBILE ONLY: Centered Competition Logo -->
-            <div class="flex md:hidden justify-center mb-6">
+            <div class="flex md:hidden justify-center mb-6 -mt-2">
                  <div class="w-14 h-14 bg-white/5 rounded-[18px] flex items-center justify-center border border-white/10 shadow-lg backdrop-blur-md">
                      <img src="${compLogo}" class="w-9 h-9 object-contain filter drop-shadow-md theme-logo" 
                           data-code="${match.competition.code}" 

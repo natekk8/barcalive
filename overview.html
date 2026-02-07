@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.cdnfonts.com">
     <title>BarcaLive - Panel Główny | FC Barcelona</title>
 
+    <!-- Critical Resource Preloads -->
+    <link rel="preload" href="/assets/fonts/SFPRODISPLAYREGULAR.woff" as="font" type="font/woff" crossorigin>
+    <link rel="preload" href="/assets/fonts/SFPRODISPLAYBOLD.woff" as="font" type="font/woff" crossorigin>
+
     <!-- SEO Meta Tags -->
     <meta name="description"
         content="Centrum dowodzenia kibica FC Barcelony. Sprawdź wyniki na żywo, najbliższe mecze, formę zespołu i transmisje TV. Wszystko w jednym miejscu.">
@@ -40,8 +44,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <script src="https://cdn.tailwindcss.com" defer></script>
-    <script src="https://unpkg.com/lucide@latest" defer></script>
 
     <link rel="stylesheet" href="css/styles_final.css">
     <link rel="stylesheet" href="css/custom-theme.css">
@@ -81,7 +83,9 @@
         <section id="view-overview" class="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div class="md:col-span-8 glass-premium p-10 relative overflow-hidden group">
                 <!-- Badge is now rendered dynamically by JavaScript in renderNextMatch() -->
-                <div id="next-match-container" class="min-h-[200px] flex items-center justify-center">
+                <!-- Badge is now rendered dynamically by JavaScript in renderNextMatch() -->
+                <div id="next-match-container"
+                    class="min-h-[300px] md:min-h-[220px] flex items-center justify-center relative">
                 </div>
 
                 <div class="mt-8 flex justify-center">
@@ -132,6 +136,8 @@
     }
     </script>
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="assets/js/main.js" type="module"></script>
 </body>
 
