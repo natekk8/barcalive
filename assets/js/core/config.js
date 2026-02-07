@@ -3,10 +3,10 @@
  * @constant {Object}
  */
 export const CONFIG = {
-  // Supabase Configuration (Anon Key is safe - protected by RLS)
+  // Supabase Configuration
   SUPABASE: {
-    url: "https://pwhozwwfsirpwjmshfjp.supabase.co",
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3aG96d3dmc2lycHdqbXNoZmpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDc5MDUsImV4cCI6MjA4NTYyMzkwNX0.z2HffI2aqhjIsnrxwtKXXc-ky2Pcp2VREPTqlNKtJ1w"
+    url: "https://bwmkvehxzcdzdxiqdqin.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bWt2ZWh4emNkemR4aXFkcWluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0Njk3MTEsImV4cCI6MjA4NjA0NTcxMX0.Z8WI_FYTFiny1eudDcCsuLmwEruG-w4Nre-av38dUXc"
   },
 
   API_ENDPOINTS: {

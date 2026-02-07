@@ -1,8 +1,0 @@
-name = "first-sync"
-main = "worker.js"
-compatibility_date = "2024-01-01"
-compatibility_flags = ["nodejs_compat"]
-
-[triggers]
-# Runs daily at 23:01 UTC (00:01 CET winter / 01:01 CEST summer)
-crons = ["1 23 * * *"]

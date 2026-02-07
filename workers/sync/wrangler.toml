@@ -1,0 +1,12 @@
+name = "barcalive-sync"
+main = "src/index.js"
+compatibility_date = "2024-02-07"
+
+# Schedule: Every minute
+[triggers]
+crons = ["* * * * *"]
+
+[vars]
+# Placeholder for secrets - user needs to set these in Cloudflare Dashboard
+SUPABASE_URL = "https://bwmkvehxzcdzdxiqdqin.supabase.co"
+# SUPABASE_SERVICE_KEY will be set as a secret

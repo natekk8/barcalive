@@ -32,8 +32,46 @@ export class BarcaAPI {
    * Fetches the consolidated data from the API
    * @returns {Promise<Object>}
    */
+  /**
+   * Fetches the consolidated data from Supabase app_cache
+   * @returns {Promise<Object>}
+   */
   async fetchAllData(silent = false) {
-    return this._performFetch('allData', CONFIG.API_ENDPOINTS.data, silent);
+    // 1. Connectivity Check
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      barcaState.setState('offline');
+      return { success: false, data: null, timestamp: Date.now(), error: 'Offline' };
+    }
+
+    try {
+      if (!silent) barcaState.setState('loading');
+
+      // Fetch from Supabase app_cache (ID=1)
+      const { data, error } = await supabase
+        .from('app_cache')
+        .select('data, last_updated')
+        .eq('id', '1')
+        .single();
+
+      if (error) throw error;
+      if (!data || !data.data) throw new Error('No data in cache');
+
+      const resultData = data.data;
+      const timestamp = new Date(data.last_updated).getTime();
+
+      // Detect match end and trigger worker sync (if needed, though Worker handles this now)
+      if (resultData.matches) {
+        this._detectMatchEnd(resultData.matches);
+      }
+
+      if (!silent) barcaState.setState('idle');
+      return { success: true, data: resultData, timestamp };
+
+    } catch (err) {
+      console.error('[BarcaAPI] Error fetching from Supabase:', err);
+      if (!silent) barcaState.setState('error');
+      return { success: false, data: null, timestamp: Date.now(), error: err.message };
+    }
   }
 
   /**

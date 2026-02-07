@@ -62,6 +62,49 @@ const TEAM_CRESTS = {
     'Kairat': 2596
 };
 
+// Custom Channel Mappings (API Name -> Filename)
+const CHANNEL_LOGO_MAP = {
+    "Canal+ Sport": "canal-plus-sport-pl.png",
+    "Canal+ Sport 2": "canal-plus-sport-2-pl.png",
+    "Canal+ Sport 3": "canal-plus-sport-3-pl.png",
+    "Canal+ Sport 4": "canal-plus-sport-4-pl.png",
+    "Canal+ Sport 5": "canal-plus-sport-5-pl.png",
+    "Canal+ Now": "canal-plus-now-pl.png",
+    "DAZN": "dazn-int.png",
+    "DAZN 1": "dazn1-int.png",
+    "DAZN 2": "dazn2-int.png",
+    "Eleven Sports": "eleven-sports-int.png",
+    "Eleven Sports 1": "eleven-sports-1-int.png",
+    "Eleven Sports 2": "eleven-sports-2-int.png",
+    "Eleven Sports 3": "eleven-sports-3-int.png",
+    "Eleven Sports 4": "eleven-sports-4-int.png",
+    "Eleven Sports 5": "eleven-sports-5-int.png",
+    "Eleven Sports 6": "eleven-sports-6-int.png",
+    "Polsat Sport": "polsat-sport-pl.png",
+    "Polsat Sport 1": "polsat-sport-1-pl.png",
+    "Polsat Sport 2": "polsat-sport-2-pl.png",
+    "Polsat Sport 3": "polsat-sport-3-pl.png",
+    "Polsat Sport Extra": "polsat-sport-extra-pl.png",
+    "Polsat Sport Extra 1": "polsat-sport-extra-1-pl.png",
+    "Polsat Sport Extra 2": "polsat-sport-extra-2-pl.png",
+    "Polsat Sport Extra 3": "polsat-sport-extra-3-pl.png",
+    "Polsat Sport Extra 4": "polsat-sport-extra-4-pl.png",
+    "Polsat Sport Fight": "polsat-sport-fight-pl.png",
+    "Polsat Sport News": "polsat-sport-news-pl.png",
+    "Polsat Sport Premium 1": "polsat-sport-premium-1-pl.png",
+    "Polsat Sport Premium 2": "polsat-sport-premium-2-pl.png",
+    "Red Bull TV": "red-bull-tv-int.png",
+    "TVP Sport": "tvp-sport-pl.png",
+    "TVP Sport HD": "tvp-sport-hd-pl.png",
+    // Competitions
+    "Champions League": "cl.png",
+    "La Liga": "pd.png",
+    "Copa del Rey": "cdr.png",
+    "Supercopa de Espana": "scde.png"
+};
+
+const LOGO_BASE_URL = "https://bwmkvehxzcdzdxiqdqin.supabase.co/storage/v1/object/public/logos";
+
 function getTeamCrest(name, existingCrest) {
     if (!name) return existingCrest || `https://api.sofascore.app/api/v1/team/0/image`;
 
@@ -799,8 +842,8 @@ async function initWhereToWatch() {
         } else {
             renderTransmissions([]);
         }
-    } catch (err) {
-        console.error("Transmissions error:", err);
+    } catch (e) {
+        console.error("Transmission error:", e);
         renderTransmissions([]);
     }
 }
@@ -810,19 +853,30 @@ function renderTransmissions(channels) {
     if (!container) return;
 
     if (!channels || channels.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-8 text-center opacity-40 text-xs font-bold uppercase tracking-widest">${t('unavailable')}</div>`;
+        container.innerHTML = `<div class="text-center opacity-40 text-xs py-2">No transmission info</div>`;
         return;
     }
 
-    container.innerHTML = channels.map((channel, idx) => `
-        <div class="transmission-card">
-            <div class="channel-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-40"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+    container.innerHTML = channels.map(channel => {
+        // Try to map channel name to a logo file
+        // If exact match fails, try partial check or fallback
+        const filename = CHANNEL_LOGO_MAP[channel];
+        let logoUrl = null;
+
+        if (filename) {
+            logoUrl = `${LOGO_BASE_URL}/channel/${filename}`;
+        }
+
+        return `
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center border border-white/10 overflow-hidden">
+                    ${logoUrl
+                ? `<img src="${logoUrl}" alt="${channel}" class="w-full h-full object-cover">`
+                : `<span class="text-[8px] opacity-70 font-bold text-center leading-none px-1">${channel}</span>`
+            }
+                </div>
             </div>
-            <div>
-                <h4 class="font-bold text-sm tracking-tight">${channel}</h4>
-                <p class="text-[10px] font-black uppercase tracking-[0.1em] opacity-30">Broadcast</p>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
+
