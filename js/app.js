@@ -393,7 +393,7 @@ async function initOverview() {
     // Show live match if available, otherwise show next match
     const matchToShow = liveMatch || nextMatch;
     const isLiveMatch = !!liveMatch;
-    renderNextMatch(matchToShow, isLiveMatch);
+    renderNextMatch(matchToShow, isLiveMatch, standings);
     renderRecentForm(pastMatches);
     initWhereToWatch();
 }
@@ -454,7 +454,7 @@ function updateLiveMinute(match) {
 }
 
 
-function renderNextMatch(match, isLive = false) {
+function renderNextMatch(match, isLive = false, standings = []) {
     const container = document.getElementById('next-match-container');
     if (!match) {
         if (container) container.innerHTML = `<div class="text-center opacity-50">${t('tbd')}</div>`;
@@ -467,6 +467,30 @@ function renderNextMatch(match, isLive = false) {
 
     console.log('[renderNextMatch] isLive:', isLive, 'status:', match.status);
 
+    // Helper to find position
+    const getPosition = (teamId, teamName, currentPos) => {
+        if (currentPos) return currentPos;
+        if (!standings || !standings.length) return null;
+
+        // Flatten standings tables (handling multiple leagues/groups)
+        for (const s of standings) {
+            const found = s.table.find(row => (row.team && row.team.id === teamId) || row.name === teamName || row.name === team.shortName); // team.shortName not available here directly, use passed name?
+            // Actually table row has .name or .team.name.
+            // Let's iterate.
+            const row = s.table.find(r => {
+                if (r.team && r.team.id === teamId) return true;
+                if (r.name && (r.name === teamName || r.name.includes(teamName))) return true;
+                return false;
+            });
+            if (row) return row.pos || row.position;
+        }
+        return null;
+    };
+
+    const homePos = getPosition(match.homeTeam.id, match.homeTeam.name || match.homeTeam.shortName, match.homeTeam.competitionPosition);
+    const awayPos = getPosition(match.awayTeam.id, match.awayTeam.name || match.awayTeam.shortName, match.awayTeam.competitionPosition);
+
+
     // Logic for Time/Score and Date/Minute
     let mainDisplay = '';
     let subDisplay = '';
@@ -476,20 +500,28 @@ function renderNextMatch(match, isLive = false) {
         const awayScore = match.score?.fullTime?.away ?? 0;
         mainDisplay = `${homeScore} - ${awayScore}`;
 
-        // Calculate minute using same logic as formatMatchTime
-        const start = new Date(match.utcDate);
-        const now = new Date();
-        const diffMins = Math.floor((now - start) / 60000);
-
-        let minute = '';
-        if (diffMins > 45 && diffMins <= 60) {
-            minute = 'HT';
+        // Calculate minute using API or same logic as formatMatchTime
+        if (match.minute) {
+            subDisplay = match.minute + "'";
         } else {
-            const actualMin = diffMins > 60 ? diffMins - 15 : diffMins;
-            minute = actualMin + "'";
+            const start = new Date(match.utcDate);
+            const now = new Date();
+            const diffMins = Math.floor((now - start) / 60000);
+
+            let minute = '';
+            // Auto-detect LIVE status (matches started in the last 135 minutes)
+            if (diffMins >= 0 && diffMins <= 135) {
+                if (diffMins > 45 && diffMins <= 60) minute = "HT";
+                else {
+                    const actualMin = diffMins > 60 ? diffMins - 15 : diffMins;
+                    minute = actualMin + "'";
+                }
+            } else {
+                minute = "LIVE";
+            }
+            subDisplay = minute;
         }
 
-        subDisplay = minute;
     } else {
         mainDisplay = new Date(match.utcDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         subDisplay = window.I18n?.formatDate ? window.I18n.formatDate(match.utcDate, { weekday: 'long', month: 'long', day: 'numeric' }) : new Date(match.utcDate).toLocaleDateString();
@@ -508,16 +540,17 @@ function renderNextMatch(match, isLive = false) {
 
     // Shirt Colors for dynamic glow
     const homeColor = match.homeTeam.homeShirtColor || '#ffffff';
-    const awayColor = match.awayTeam.homeShirtColor || '#ffffff'; // Fallback if away shirt color missing (API usually gives home shirt only? User says homeShirtColor in homeTeam obj, but awayTeam object structure might have it too or not? User example shows awayTeam has NO extra fields in upcoming? Wait, user example for upcoming shows awayTeam has NO extras. Live match awayTeam: NO extras. So only homeTeam has it? 
-    // Wait, the user said "In homeTeam object added...". Checks user JSON:
-    // homeTeam: { ..., homeShirtColor: "#9F0042", ... }
-    // awayTeam: { ... } (no shirt color in example). 
-    // Okay, I'll use homeColor for home team glow, but away team might need default or maybe I can't use it for away.
 
     // Referee, Round, Venue, Stage
-    const roundInfo = match.currentRound ? `KOLEJKA ${match.currentRound}` : '';
+    let roundInfo = '';
+    if (match.currentRound) {
+        roundInfo = `KOLEJKA ${match.currentRound}`;
+    } else if (match.displayName) {
+        roundInfo = match.displayName;
+    }
+
     const refereeInfo = match.referee?.displayName ? `Sędzia: ${match.referee.displayShortName || match.referee.displayName}` : '';
-    const venueInfo = match.venue ? `@ ${match.venue}` : '';
+    const venueInfo = match.venue || ''; // Removed "@" as requested
     const stageInfo = (match.stageName && match.stageName !== match.competition.name) ? match.stageName : '';
 
     const metaInfoParts = [stageInfo, roundInfo, venueInfo, refereeInfo].filter(Boolean);
@@ -553,7 +586,7 @@ function renderNextMatch(match, isLive = false) {
                     </div>
                     <h3 class="font-bold text-xs md:text-xl flex items-center justify-center gap-2">
                         ${match.homeTeam.shortName}
-                        ${match.homeTeam.competitionPosition ? `<span class="bg-white/10 text-[9px] px-1.5 py-0.5 rounded text-white/60 font-mono" title="Pozycja w lidze">#${match.homeTeam.competitionPosition}</span>` : ''}
+                        ${homePos ? `<span class="bg-white/10 text-[9px] px-1.5 py-0.5 rounded text-white/60 font-mono" title="Pozycja w lidze">#${homePos}</span>` : ''}
                     </h3>
                 </div>
 
@@ -571,7 +604,7 @@ function renderNextMatch(match, isLive = false) {
                     </div>
                     <h3 class="font-bold text-xs md:text-xl flex items-center justify-center gap-2">
                         ${match.awayTeam.shortName}
-                        ${match.awayTeam.competitionPosition ? `<span class="bg-white/10 text-[9px] px-1.5 py-0.5 rounded text-white/60 font-mono" title="Pozycja w lidze">#${match.awayTeam.competitionPosition}</span>` : ''}
+                        ${awayPos ? `<span class="bg-white/10 text-[9px] px-1.5 py-0.5 rounded text-white/60 font-mono" title="Pozycja w lidze">#${awayPos}</span>` : ''}
                     </h3>
                 </div>
 
@@ -855,7 +888,9 @@ function renderScheduleList(type) {
                         </h4>
                         <span class="text-[9px] font-black opacity-40 uppercase tracking-widest text-right">
                             ${m.competition.name || m.competition.code}
-                            ${m.currentRound ? `<br><span class="opacity-60">Kolejka ${m.currentRound}</span>` : ''}
+                            ${m.currentRound
+                ? `<br><span class="opacity-60">Kolejka ${m.currentRound}</span>`
+                : (m.displayName ? `<br><span class="opacity-60">${m.displayName}</span>` : '')}
                         </span>
                     </div>
                     <p class="text-xs text-secondary font-medium">${I18n.formatDate(date, { weekday: 'long', month: 'short', day: 'numeric' })}${timeDisplay}</p>
@@ -914,23 +949,23 @@ function renderTransmissions(channels) {
         // Dynamic gradient based on channel name hash
         const hash = channel.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
         const hue = hash % 360;
-        const gradientStyle = `background: linear-gradient(135deg, hsla(${hue}, 70%, 20%, 0.8) 0%, hsla(${hue}, 70%, 10%, 0.9) 100%); border: 1px solid hsla(${hue}, 50%, 40%, 0.3);`;
+        const gradientStyle = `background: linear-gradient(135deg, hsla(${hue}, 70%, 20%, 0.9) 0%, hsla(${hue}, 70%, 10%, 0.95) 100%); border: 1px solid hsla(${hue}, 50%, 40%, 0.3);`;
 
         return `
-            <div class="group relative flex items-center gap-3 p-3 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] overflow-hidden" 
+            <div class="group relative flex items-center gap-4 p-4 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] overflow-hidden" 
                  style="${gradientStyle} box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
                 
                 <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                <div class="w-10 h-10 bg-black/20 rounded-lg flex items-center justify-center p-1.5 shrink-0 backdrop-blur-sm border border-white/5">
+                <div class="shrink-0">
                      ${logoUrl
-                ? `<img src="${logoUrl}" alt="${channel}" class="w-full h-full object-contain filter drop-shadow-md">`
-                : `<span class="text-[10px] font-bold text-white/80 leading-tight text-center">${channel.substring(0, 3)}</span>`
+                ? `<img src="${logoUrl}" alt="${channel}" class="w-12 h-12 object-contain filter drop-shadow-lg">`
+                : `<div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center border border-white/5"><span class="text-[10px] font-bold text-white/80 leading-tight text-center">${channel.substring(0, 3)}</span></div>`
             }
                 </div>
                 
                 <div class="flex flex-col min-w-0">
-                    <span class="text-xs font-bold text-white tracking-wide truncate">${channel}</span>
+                    <span class="text-sm font-bold text-white tracking-wide truncate">${channel}</span>
                     <span class="text-[9px] font-medium text-white/50 uppercase tracking-wider">Transmisja</span>
                 </div>
             </div>

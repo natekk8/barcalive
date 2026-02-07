@@ -28,7 +28,8 @@ export async function onRequest(context) {
     console.log('[Sync Notify] Retrieved sync key, triggering worker...');
 
     // Call Worker with current sync key
-    const workerUrl = `https://first-sync.barcalive.workers.dev/?key=${encodeURIComponent(currentKey)}`;
+    // Call Worker
+    const workerUrl = 'https://barcalive-sync.natekkz.workers.dev/trigger';
 
     const response = await fetch(workerUrl);
     const data = await response.text();

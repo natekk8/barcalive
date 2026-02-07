@@ -99,11 +99,13 @@ class DynamicIsland {
             .sort((a, b) => a.parsedDate - b.parsedDate);
 
         const liveMatch = matches.find(m => {
+            const isStatusLive = ['LIVE', 'IN_PLAY', 'PAUSED', 'HALFTIME'].includes(m.status);
+            if (isStatusLive) return true;
+
             const start = new Date(m.utcDate);
             const diff = (now - start) / 60000;
-            const isStatusLive = ['LIVE', 'IN_PLAY', 'PAUSED', 'HALFTIME'].includes(m.status);
-            // Allow if status is officially live OR if within 2.5h window effectively
-            return isStatusLive || (diff >= -5 && diff < 135);
+            // Backup check: within 2.5h window
+            return (diff >= -5 && diff < 135);
         });
 
         if (liveMatch) {
